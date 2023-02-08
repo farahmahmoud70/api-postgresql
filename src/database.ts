@@ -13,7 +13,7 @@ const {
 } = process.env;
 
 let Client;
-console.log(ENV);
+console.log(process.env);
 
 if (ENV === 'test') {
   Client = new Pool({

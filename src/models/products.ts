@@ -3,13 +3,12 @@
 import Client from '../database';
 
 export type Product = {
-  id: number;
   name: string;
   price: number;
   category: string;
 };
 
-export class productsStore {
+export class ProductsStore {
   async index(): Promise<Product[]> {
     try {
       //@ts-ignore
@@ -23,19 +22,19 @@ export class productsStore {
     }
   }
 
-  async show(id: string): Promise<Product> {
+  async show(query: string): Promise<Product> {
     try {
-      const sql = 'SELECT * FROM products WHERE id=($1)';
+      const sql = `SELECT * FROM products WHERE (query)=($1)`;
       //@ts-ignore
       const conn = await Client.connect();
 
-      const result = await conn.query(sql, [id]);
+      const result = await conn.query(sql, [query]);
 
       conn.release();
 
       return result.rows[0];
     } catch (err) {
-      throw new Error(`Could not find product ${id}. Error: ${err}`);
+      throw new Error(`Could not find product ${query}. Error: ${err}`);
     }
   }
 
