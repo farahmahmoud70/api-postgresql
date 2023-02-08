@@ -1,15 +1,21 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 //@ts-ignore
 import Client from '../database';
+import bcrypt from 'bcrypt';
+
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export type User = {
-  id: number;
   firstname: string;
   lastname: string;
-  password: string;
+  password_digest: string;
 };
 
-export class usersStore {
+const { BCRYPT_PASSWORD: pepper, SALT_ROUNDS: saltRounds } = process.env;
+
+export class UsersStore {
   async index(): Promise<User[]> {
     try {
       //@ts-ignore
@@ -46,10 +52,15 @@ export class usersStore {
       //@ts-ignore
       const conn = await Client.connect();
 
+      const hash = bcrypt.hashSync(
+        user.password_digest + pepper,
+        parseInt(saltRounds as string)
+      );
+
       const result = await conn.query(sql, [
         user.firstname,
         user.lastname,
-        user.password,
+        hash,
       ]);
 
       const newUser = result.rows[0];
@@ -62,5 +73,26 @@ export class usersStore {
         `Could not add new user ${user.firstname}. Error: ${err}`
       );
     }
+  }
+
+  async authenticate(
+    firstname: string,
+    password: string
+  ): Promise<User | null> {
+    //@ts-ignore
+    const conn = await Client.connect();
+    const sql = 'SELECT password_digest FROM users WHERE username=($1)';
+
+    const result = await conn.query(sql, [firstname]);
+
+    if (result.rows.length) {
+      const user = result.rows[0];
+
+      if (bcrypt.compareSync(password + pepper, user.password_digest)) {
+        return user;
+      }
+    }
+
+    return null;
   }
 }
