@@ -8,9 +8,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export type User = {
+  id?: number;
   firstname: string;
   lastname: string;
-  password_digest: string;
+  username: string;
+  password: string;
 };
 
 const { BCRYPT_PASSWORD: pepper, SALT_ROUNDS: saltRounds } = process.env;
@@ -29,37 +31,39 @@ export class UsersStore {
     }
   }
 
-  async show(id: string): Promise<User> {
+  async show(queryString: string, queryStringValue: string): Promise<User> {
     try {
-      const sql = 'SELECT * FROM users WHERE id=($1)';
+      const sql = `SELECT * FROM users WHERE ${queryString}=($1)`;
+
       //@ts-ignore
       const conn = await Client.connect();
 
-      const result = await conn.query(sql, [id]);
+      const result = await conn.query(sql, [queryStringValue]);
 
       conn.release();
 
       return result.rows[0];
     } catch (err) {
-      throw new Error(`Could not find user ${id}. Error: ${err}`);
+      throw new Error(`Could not find user ${queryStringValue}. Error: ${err}`);
     }
   }
 
   async create(user: User): Promise<User> {
     try {
       const sql =
-        'INSERT INTO users (firstname, lastname, passowrd) VALUES($1, $2, $3) RETURNING *';
+        'INSERT INTO users (firstname, lastname, username ,password_digest) VALUES($1, $2, $3, $4) RETURNING *';
       //@ts-ignore
       const conn = await Client.connect();
 
       const hash = bcrypt.hashSync(
-        user.password_digest + pepper,
+        user.password + pepper,
         parseInt(saltRounds as string)
       );
 
       const result = await conn.query(sql, [
         user.firstname,
         user.lastname,
+        user.username,
         hash,
       ]);
 
@@ -75,15 +79,13 @@ export class UsersStore {
     }
   }
 
-  async authenticate(
-    firstname: string,
-    password: string
-  ): Promise<User | null> {
+  async authenticate(username: string, password: string): Promise<User | null> {
     //@ts-ignore
     const conn = await Client.connect();
     const sql = 'SELECT password_digest FROM users WHERE username=($1)';
 
-    const result = await conn.query(sql, [firstname]);
+    const result = await conn.query(sql, [username]);
+    console.log(result.rows);
 
     if (result.rows.length) {
       const user = result.rows[0];
