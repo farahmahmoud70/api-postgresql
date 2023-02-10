@@ -8,17 +8,17 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### Products
 
-- Index 'products' [GET]
-- Show 'products/:id' [GET]
-- Create [token required] 'new-product' [POST]
+- Index 'products/' [GET]
+- Show 'products/:id/' [GET]
+- Create [token required] 'new-product/' [POST]
 - [OPTIONAL] Top 5 most popular products 'popular-products/' [GET]
-- [OPTIONAL] Products by category (args: product category) 'products/:category' [GET]
+- [OPTIONAL] Products by category (args: product category) 'products/category/:category/' [GET]
 
 #### Users
 
-- Index [token required] 'users' [GET]
-- Show [token required] 'users/:id' [GET]
-- Create N[token required] 'new-user' [POST]
+- Index [token required] 'users/' [GET]
+- Show [token required] 'users/:username/' [GET] I have added a username to the schema to make it more reliable instead of depending on the id
+- Create N 'new-user/' [POST]
 
 #### Orders
 
@@ -39,6 +39,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 - id
 - firstName
 - lastName
+- username
 - password
 
 #### Orders

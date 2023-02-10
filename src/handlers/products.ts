@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 
 import { Product, ProductsStore } from '../models/products';
 
-import jwt from 'jsonwebtoken';
+import { verifyAuthToken } from './helper';
 
 import dotenv from 'dotenv';
 
@@ -16,12 +16,12 @@ const index = async (_req: Request, res: Response) => {
 };
 
 const showProductById = async (_req: Request, res: Response) => {
-  const product = await store.show(_req.params.id);
+  const product = await store.show('id', _req.params.id);
   res.json(product);
 };
 
 const showProductByCategory = async (_req: Request, res: Response) => {
-  const product = await store.show(_req.params.category);
+  const product = await store.show('category', _req.params.category);
   res.json(product);
 };
 
@@ -31,15 +31,6 @@ const create = async (_req: Request, res: Response) => {
     price: _req.body.price,
     category: _req.body.category,
   };
-  try {
-    const authorizationHeader = _req.headers.authorization;
-    const token = authorizationHeader!.split(' ')[1];
-    jwt.verify(token, process.env.NEW_USER_TOKEN as string);
-  } catch (err) {
-    res.status(401);
-    res.json('Access denied, invalid token');
-    return;
-  }
 
   try {
     const newProduct = await store.create(product);
@@ -53,9 +44,9 @@ const create = async (_req: Request, res: Response) => {
 
 const products_routes = (app: express.Application) => {
   app.get('/products', index);
-  app.get('/product', showProductById);
-  app.get('/products/:category', showProductByCategory);
-  app.post('/new-product', create);
+  app.get('/products/:id', showProductById);
+  app.get('/products/category/:category', showProductByCategory);
+  app.post('/new-product', verifyAuthToken, create);
 };
 
 export default products_routes;
