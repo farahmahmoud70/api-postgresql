@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/server.ts",
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
-    "test": "ENV=test db-migrate --env test up && jasmine-ts && db-migrate dp:drop test",
+    "test": "export ENV=test && db-migrate --env test up && jasmine-ts && db-migrate dp:drop test",
     "tsc": "tsc",
     "lint": "eslint src/**/*.ts",
     "prettier": "prettier --config .prettierrc 'src/**/*.{ts,css,md,json}' --write"

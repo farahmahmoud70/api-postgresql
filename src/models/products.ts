@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-//@ts-ignore
 import Client from '../database';
 
 export type Product = {
@@ -12,7 +10,6 @@ export type Product = {
 export class ProductsStore {
   async index(): Promise<Product[]> {
     try {
-      //@ts-ignore
       const conn = await Client.connect();
       const sql = 'SELECT * FROM products';
       const result = await conn.query(sql);
@@ -23,18 +20,20 @@ export class ProductsStore {
     }
   }
 
-  async show(queryString: string, queryStringValue: string): Promise<Product> {
-    console.log(queryString, queryStringValue);
+  async show(
+    queryString: string,
+    queryStringValue: string
+  ): Promise<Product[]> {
     try {
       const sql = `SELECT * FROM products WHERE ${queryString}=($1)`;
-      //@ts-ignore
+
       const conn = await Client.connect();
 
       const result = await conn.query(sql, [queryStringValue]);
 
       conn.release();
 
-      return result.rows[0];
+      return result.rows;
     } catch (err) {
       throw new Error(
         `Could not find product ${queryStringValue}. Error: ${err}`
@@ -46,7 +45,7 @@ export class ProductsStore {
     try {
       const sql =
         'INSERT INTO products (name, price, category) VALUES($1, $2, $3) RETURNING *';
-      //@ts-ignore
+
       const conn = await Client.connect();
 
       const result = await conn.query(sql, [
