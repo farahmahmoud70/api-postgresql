@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-//@ts-ignore
 import Client from '../database';
 import bcrypt from 'bcrypt';
 
@@ -20,7 +18,6 @@ const { BCRYPT_PASSWORD: pepper, SALT_ROUNDS: saltRounds } = process.env;
 export class UsersStore {
   async index(): Promise<User[]> {
     try {
-      //@ts-ignore
       const conn = await Client.connect();
       const sql = 'SELECT * FROM users';
       const result = await conn.query(sql);
@@ -35,7 +32,6 @@ export class UsersStore {
     try {
       const sql = `SELECT * FROM users WHERE ${queryString}=($1)`;
 
-      //@ts-ignore
       const conn = await Client.connect();
 
       const result = await conn.query(sql, [queryStringValue]);
@@ -51,8 +47,8 @@ export class UsersStore {
   async create(user: User): Promise<User> {
     try {
       const sql =
-        'INSERT INTO users (firstname, lastname, username ,password_digest) VALUES($1, $2, $3, $4) RETURNING *';
-      //@ts-ignore
+        'INSERT INTO users (firstname, lastname, username ,password) VALUES($1, $2, $3, $4) RETURNING *';
+
       const conn = await Client.connect();
 
       const hash = bcrypt.hashSync(
@@ -80,12 +76,10 @@ export class UsersStore {
   }
 
   async authenticate(username: string, password: string): Promise<User | null> {
-    //@ts-ignore
     const conn = await Client.connect();
-    const sql = 'SELECT password_digest FROM users WHERE username=($1)';
+    const sql = 'SELECT password FROM users WHERE username=($1)';
 
     const result = await conn.query(sql, [username]);
-    console.log(result.rows);
 
     if (result.rows.length) {
       const user = result.rows[0];
