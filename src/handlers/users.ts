@@ -4,7 +4,7 @@ import { User, UsersStore } from '../models/users';
 
 import jwt from 'jsonwebtoken';
 
-import { verifyAuthToken } from './helper';
+import { verifyAuthToken } from '../utilities/helper';
 
 import dotenv from 'dotenv';
 
