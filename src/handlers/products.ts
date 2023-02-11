@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 
 import { Product, ProductsStore } from '../models/products';
 
-import { verifyAuthToken } from './helper';
+import { verifyAuthToken } from '../utilities/helper';
 
 import dotenv from 'dotenv';
 
