@@ -1,1 +1,1 @@
-CREATE TABLE users (id SERIAL, firstname VARCHAR(50), lastname VARCHAR(50), password VARCHAR, username VARCHAR(50) PRIMARY KEY);
+CREATE TABLE users (id SERIAL PRIMARY KEY, firstname VARCHAR(50), lastname VARCHAR(50), password VARCHAR);

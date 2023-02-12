@@ -20,16 +20,10 @@ const showProductById = async (_req: Request, res: Response) => {
   res.json(product);
 };
 
-const showProductByCategory = async (_req: Request, res: Response) => {
-  const product = await store.show('category', _req.params.category);
-  res.json(product);
-};
-
 const create = async (_req: Request, res: Response) => {
   const product: Product = {
     name: _req.body.name,
     price: _req.body.price,
-    category: _req.body.category,
   };
 
   try {
@@ -45,8 +39,7 @@ const create = async (_req: Request, res: Response) => {
 const products_routes = (app: express.Application) => {
   app.get('/products', index);
   app.get('/products/:id', showProductById);
-  app.get('/products/category/:category', showProductByCategory);
-  app.post('/new-product', verifyAuthToken, create);
+  app.post('/products', verifyAuthToken, create);
 };
 
 export default products_routes;

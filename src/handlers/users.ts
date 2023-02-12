@@ -18,7 +18,7 @@ const index = async (_req: Request, res: Response) => {
 };
 
 const show = async (_req: Request, res: Response) => {
-  const user = await store.show('username', _req.params.username as string);
+  const user = await store.show('id', _req.params.id as string);
   res.json(user);
 };
 
@@ -26,7 +26,6 @@ const create = async (_req: Request, res: Response) => {
   const user: User = {
     firstname: _req.body.firstname,
     lastname: _req.body.lastname,
-    username: _req.body.username,
     password: _req.body.password,
   };
   try {
@@ -44,25 +43,28 @@ const create = async (_req: Request, res: Response) => {
 
 const authenticate = async (_req: Request, res: Response) => {
   const user: User = {
+    id: _req.body.id,
     firstname: _req.body.firstname,
     lastname: _req.body.lastname,
-    username: _req.body.username,
     password: _req.body.password,
   };
   try {
-    const u = await store.authenticate(user.username, user.password);
+    const u = await store.authenticate(
+      user.id as unknown as string,
+      user.password
+    );
     const token = jwt.sign({ user: u }, process.env.NEW_USER_TOKEN as string);
     res.json(token);
   } catch (error) {
     res.status(401);
-    res.json(`couldn't authenticate user ${user.username} ${error}`);
+    res.json(`couldn't authenticate user ${user.id} ${error}`);
   }
 };
 
 const users_routes = (app: express.Application) => {
   app.get('/users', verifyAuthToken, index);
-  app.get('/users/:username', verifyAuthToken, show);
-  app.post('/new-user', create);
+  app.get('/users/:id', verifyAuthToken, show);
+  app.post('/users', create);
   app.post('/user-authenticate', authenticate);
 };
 

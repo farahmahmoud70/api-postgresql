@@ -9,7 +9,6 @@ export type User = {
   id?: number;
   firstname: string;
   lastname: string;
-  username: string;
   password: string;
 };
 
@@ -47,7 +46,7 @@ export class UsersStore {
   async create(user: User): Promise<User> {
     try {
       const sql =
-        'INSERT INTO users (firstname, lastname, username ,password) VALUES($1, $2, $3, $4) RETURNING *';
+        'INSERT INTO users (firstname, lastname ,password) VALUES($1, $2, $3) RETURNING *';
 
       const conn = await Client.connect();
 
@@ -59,7 +58,6 @@ export class UsersStore {
       const result = await conn.query(sql, [
         user.firstname,
         user.lastname,
-        user.username,
         hash,
       ]);
 
@@ -75,11 +73,11 @@ export class UsersStore {
     }
   }
 
-  async authenticate(username: string, password: string): Promise<User | null> {
+  async authenticate(id: string, password: string): Promise<User | null> {
     const conn = await Client.connect();
-    const sql = 'SELECT password FROM users WHERE username=($1)';
+    const sql = 'SELECT password FROM users WHERE id=($1)';
 
-    const result = await conn.query(sql, [username]);
+    const result = await conn.query(sql, [id]);
 
     if (result.rows.length) {
       const user = result.rows[0];
