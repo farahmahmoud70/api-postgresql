@@ -19,7 +19,7 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  var filePath = path.join(__dirname, 'sqls', '20230208114456-users-table-up.sql');
+  var filePath = path.join(__dirname, 'sqls', '20230212122220-orders-table-up.sql');
   return new Promise( function( resolve, reject ) {
     fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data){
       if (err) return reject(err);
@@ -34,7 +34,7 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
-  var filePath = path.join(__dirname, 'sqls', '20230208114456-users-table-down.sql');
+  var filePath = path.join(__dirname, 'sqls', '20230212122220-orders-table-down.sql');
   return new Promise( function( resolve, reject ) {
     fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data){
       if (err) return reject(err);
@@ -49,5 +49,5 @@ exports.down = function(db) {
 };
 
 exports._meta = {
-  "version": 2
+  "version": 1
 };

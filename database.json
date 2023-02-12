@@ -12,5 +12,6 @@
     "database": "frontbackend_store_test",
     "user": "frontbackend_store_user",
     "password": "password123"
-  }
+  },
+  "sql-file" : true
 }
