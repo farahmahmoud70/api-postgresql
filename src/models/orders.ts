@@ -3,35 +3,35 @@ import Client from '../database';
 export type Order = {
   id?: number;
   status: string;
-  userId: number;
+  user_id: number;
 };
 
 export type OrderProducts = {
   id?: number;
   quantity: number;
-  productId: number;
-  orderId: number;
+  product_id: number;
+  order_id: number;
 };
 
 export class OrdersStore {
-  async show(userId: number): Promise<OrderProducts[]> {
+  async show(user_id: number): Promise<OrderProducts[]> {
     try {
       const sql = `SELECT * FROM orders INNER JOIN order_products ON orders.id = order_products.order_id WHERE user_id=($1)`;
 
       const conn = await Client.connect();
 
-      const result = await conn.query(sql, [userId]);
+      const result = await conn.query(sql, [user_id]);
 
       conn.release();
 
       return result.rows;
     } catch (err) {
-      throw new Error(`Could not find order ${userId}. Error: ${err}`);
+      throw new Error(`Could not find order ${user_id}. Error: ${err}`);
     }
   }
 
   async showOrdersByStatus(
-    userId: number,
+    user_id: number,
     status: string
   ): Promise<OrderProducts[]> {
     try {
@@ -39,13 +39,13 @@ export class OrdersStore {
 
       const conn = await Client.connect();
 
-      const result = await conn.query(sql, [userId, status]);
+      const result = await conn.query(sql, [user_id, status]);
 
       conn.release();
 
       return result.rows;
     } catch (err) {
-      throw new Error(`Could not find order ${userId}. Error: ${err}`);
+      throw new Error(`Could not find order ${user_id}. Error: ${err}`);
     }
   }
 
@@ -56,7 +56,7 @@ export class OrdersStore {
 
       const conn = await Client.connect();
 
-      const result = await conn.query(sql, [order.status, order.userId]);
+      const result = await conn.query(sql, [order.status, order.user_id]);
 
       const newProduct = result.rows[0];
 
@@ -65,7 +65,7 @@ export class OrdersStore {
       return newProduct;
     } catch (err) {
       throw new Error(
-        `Could not add new order for user ${order.userId}. Error: ${err}f`
+        `Could not add new order for user ${order.user_id}. Error: ${err}f`
       );
     }
   }
@@ -79,8 +79,8 @@ export class OrdersStore {
 
       const result = await conn.query(sql, [
         order.quantity,
-        order.orderId,
-        order.productId,
+        order.order_id,
+        order.product_id,
       ]);
 
       const newProduct = result.rows[0];
@@ -90,7 +90,7 @@ export class OrdersStore {
       return newProduct;
     } catch (err) {
       throw new Error(
-        `Could not add new order ${order.productId}. Error: ${err}`
+        `Could not add new order ${order.product_id}. Error: ${err}`
       );
     }
   }

@@ -17,13 +17,13 @@ These are the notes from a meeting with the frontend developer that describe wha
 #### Users
 
 - Index [token required] 'users/' [GET]
-- Show [token required] 'users/:username/' [GET] I have added a username to the schema to make it more reliable instead of depending on the id
+- Show [token required] 'users/:id/' [GET]
 - Create N 'users/' [POST]
 
 #### Orders
 
-- Current Order by user (args: user id)[token required] 'orders/:userId' [GET]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required] 'orders/:userId/:status' [GET]
+- Current Order by user (args: user id)[token required] 'orders/:id' [GET]
+- [OPTIONAL] Completed Orders by user (args: user id)[token required] 'orders/:id/:status' [GET]
 
 ## Data Shapes
 
@@ -39,7 +39,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 - id
 - firstName
 - lastName
-- username
 - password
 
 #### Orders

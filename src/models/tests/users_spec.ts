@@ -15,43 +15,35 @@ describe('User Model', () => {
     expect(store.create).toBeDefined();
   });
 
-  // it('create method should add a user', async () => {
-  //   const result = await store.create({
-  //     firstname: 'farah',
-  //     lastname: 'mahmoud',
-  //     username: 'farah-mahmoud-user',
-  //     password: 'farah-mahmoud-password',
-  //   });
-  //   expect(result).toEqual({
-  //     id: 1,
-  //     firstname: 'farah',
-  //     lastname: 'mahmoud',
-  //     username: 'farah-mahmoud-user',
-  //     password: 'farah-mahmoud-password',
-  //   });
-  // });
+  it('create method should add a user', async () => {
+    const result = await store.create({
+      firstname: 'farah',
+      lastname: 'mahmoud',
+      password: 'farah-mahmoud-password',
+    });
+    const user = {
+      id: result.id,
+      firstname: result.firstname,
+      lastname: result.lastname,
+    };
+    expect(user).toEqual({
+      id: 1,
+      firstname: 'farah',
+      lastname: 'mahmoud',
+    });
+  });
 
-  // it('index method should return a list of Users', async () => {
-  //   const result = await store.index();
-  //   expect(result).toEqual([
-  //     {
-  //       id: 1,
-  //       firstname: 'farah',
-  //       lastname: 'mahmoud',
-  //       username: 'farah-mahmoud-user',
-  //       password: 'farah-mahmoud-password',
-  //     },
-  //   ]);
-  // });
-
-  // it('show by username method should return the correct User', async () => {
-  //   const result = await store.show('username', 'farah-mahmoud-user');
-  //   expect(result).toEqual({
-  //     id: 1,
-  //     firstname: 'farah',
-  //     lastname: 'mahmoud',
-  //     username: 'farah-mahmoud-user',
-  //     password: '$2b$10$Cz3FjtAN0HBSmW1zb9P2le/7Rcm6CxX6ehKpExni64qzjM1OXsVAC',
-  //   });
-  // });
+  it('index method should return a list of Users', async () => {
+    const result = await store.index();
+    const user = {
+      id: result[0].id,
+      firstname: result[0].firstname,
+      lastname: result[0].lastname,
+    };
+    expect(user).toEqual({
+      id: 1,
+      firstname: 'farah',
+      lastname: 'mahmoud',
+    });
+  });
 });
