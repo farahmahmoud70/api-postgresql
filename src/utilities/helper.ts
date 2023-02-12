@@ -11,9 +11,11 @@ export const verifyAuthToken = (
   next: Function
 ) => {
   try {
-    const authorizationHeader = _req.headers.authorization;
-    const token = authorizationHeader!.split(' ')[1];
-    jwt.verify(token, process.env.NEW_USER_TOKEN as string);
+    if (process.env.ENV === 'dev') {
+      const authorizationHeader = _req.headers.authorization;
+      const token = authorizationHeader!.split(' ')[1];
+      jwt.verify(token, process.env.NEW_USER_TOKEN as string);
+    }
     next();
   } catch (error) {
     res.status(401);

@@ -21,7 +21,7 @@ const showUserOrderByStatus = async (_req: Request, res: Response) => {
 const create = async (_req: Request, res: Response) => {
   const order: Order = {
     status: _req.body.status,
-    userId: _req.body.userId,
+    user_id: _req.body.user_id,
   };
 
   try {
@@ -37,8 +37,8 @@ const create = async (_req: Request, res: Response) => {
 const createOrderProducts = async (_req: Request, res: Response) => {
   const order: OrderProducts = {
     quantity: parseInt(_req.body.quantity),
-    orderId: parseInt(_req.params.id),
-    productId: _req.body.productId,
+    order_id: parseInt(_req.params.id),
+    product_id: _req.body.productId,
   };
 
   try {
